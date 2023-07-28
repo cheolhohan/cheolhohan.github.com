@@ -64,3 +64,18 @@ ContainerD is a container runtime that is designed to be embedded into a larger 
 - crictl
   - CRI CLI
   - Can be used for all CRI-supported runtime
+
+## Pods
+
+- Pod: a collection of one or more Linux® containers, and is the smallest unit of a Kubernetes application running on worker nodes
+- Multi-Container Pod: Pod having multiple containers that share the same resources. This is especially useful helper containers such as log collectors, debuggers, sidecar etc.
+
+### Kubectl for Pods
+
+What does really `kubectl` do?
+
+For example of this command, `kubectl run nginx --image nginx`
+
+- Pulling image
+- Create container in a pod
+- Running the pod on worker node
