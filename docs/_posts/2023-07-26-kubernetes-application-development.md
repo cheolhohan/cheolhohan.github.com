@@ -79,3 +79,28 @@ For example of this command, `kubectl run nginx --image nginx`
 - Pulling image
 - Create container in a pod
 - Running the pod on worker node
+
+### Pods with YAML
+
+```yaml
+# pod-definition.yaml
+apiVersion: v1 # API Version of Kubernetes
+kind: Pod # Type of Kubernetes object
+metadata: # Metadata of the object
+  name: myapp-pod # Name of the object
+  labels:
+    app: myapp # Label for the object
+    type: front-end
+spec: # Specification of the object
+  containers: # List of containers in the pod. Because pod can have multiple containers
+    - name: nginx-container # Name of the container
+      image: nginx # Image of the container
+```
+
+```bash
+kubectl create -f pod-definition.yaml # Create a pod defined in yaml
+
+kubectl get pods # Get all pods you created
+
+kubectl describe pod myapp-pod # Get detailed information about the pod
+```
