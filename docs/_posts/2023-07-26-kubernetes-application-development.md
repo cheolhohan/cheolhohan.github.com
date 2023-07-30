@@ -104,3 +104,65 @@ kubectl get pods # Get all pods you created
 
 kubectl describe pod myapp-pod # Get detailed information about the pod
 ```
+
+### ReplicaSets
+
+- Replication Controller: A replication controller is a supervisor for long-running pods. It helps to make sure that a specified number of pods are running at any given time. It also helps in scaling up or down the number of replicas of a pod.
+- Replica: A copy of a pod for providing high availability
+- ReplicationController vs ReplicaSet
+  - ReplicationController is older and only supports equality-based selector
+  - ReplicaSet is newer and supports set-based selector
+  - apiVersion is different, ReplicationController is v1 and ReplicaSet is apps/v1
+
+```yaml
+# ReplicationController definition
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: myapp-rc
+  labels:
+    app: myapp
+    type: front-end
+spec:
+  template:
+    metadata:
+      name: myapp-pod
+      labels:
+        app: myapp
+    spec:
+      containers:
+        - name: nginx-container
+          image: nginx
+  replicas: 3
+```
+
+```yaml
+# ReplicaSet definition
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: myapp-replicaset
+  labels:
+    app: myapp
+    type: front-end
+spec:
+  template:
+    metadata:
+      name: myapp-pod
+      labels:
+        app: myapp
+        type: front-end
+    spec:
+      containers:
+        - name: nginx-container
+          image: nginx
+  replicas: 3
+  selector:
+    matchLabels:
+      type: front-end
+```
+
+### Labels and Selectors
+
+- These are required for ReplicaSet to work, but optional for ReplicationController
+- The role of ReplicaSet is to monitor the pods and if any of them were to fail, deploy new ones. But how does it know which pods to monitor? This is where labels and selectors come in.
