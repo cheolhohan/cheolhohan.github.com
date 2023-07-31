@@ -166,3 +166,100 @@ spec:
 
 - These are required for ReplicaSet to work, but optional for ReplicationController
 - The role of ReplicaSet is to monitor the pods and if any of them were to fail, deploy new ones. But how does it know which pods to monitor? This is where labels and selectors come in.
+
+## Kubernetes Deployment
+
+Deployment format is similar to ReplicaSet
+
+```yaml
+# Deployment definition
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-deployment
+  labels:
+    app: myapp
+    type: front-end
+spec:
+  template:
+    metadata:
+      name: myapp-pod
+      labels:
+        app: myapp
+        type: front-end
+    spec:
+      containers:
+        - name: nginx-container
+          image: nginx
+  replicas: 3
+  selector:
+    matchLabels:
+      type: front-end
+```
+
+## Namespace
+
+### Definitions
+
+- Namespace: A virtual cluster backed by the same physical cluster
+  - Default Namespace: The default namespace for objects with no other namespace
+  - kube-system Namespace: The namespace for objects created by Kubernetes system
+  - kube-public Namespace: The namespace is readable by all users
+- Why use Namespace?
+  - To separate resources
+  - To allocate resources
+  - To improve performance
+  - To assign access rights to resources
+- For examples, you can create a namespace for each team in your organization
+  - Dev, QA, Staging, Production, etc.
+
+For connecting to a service in specific namespace, you can use `service-name.namespace-name.svc.cluster.local`
+- `mysql.connect("db-service")` will connect to `db-service` in the same namespace
+- `mysql.connect("db-service.dev.svc.cluster.local")` will connect to `db-service` in `dev` namespace
+  - db-service: service name
+  - dev: namespace name
+  - svc: service (subdomain)
+  - cluster.local: cluster domain
+
+```yaml
+# Namespace definition
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev
+```
+
+```bash
+kubectl create -f namespace-definition.yaml # Create a namespace defined in yaml
+```
+
+### How to set namespace
+
+`kubectl get pods --namespace=dev`
+
+`kubectl get pods --all-namespaces`
+
+`kubectl config set-context $(kubectl config current-context) --namespace=dev`
+
+### Resource Quota
+
+- Resource Quota: A tool for limiting resource consumption and the number of objects in a namespace
+
+```yaml
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: compute-quota
+  namespace: dev
+spec:
+  hard:
+    pods: "10"
+    requests.cpu: "4"
+    requests.memory: 5Gi
+    limits.cpu: "10"
+    limits.memory: 10Gi
+```
+
+## Service
+
+In Kubernetes, a Service is a method for exposing a network application that is running as one or more Pods in your cluster in your cluster. A key aim of Services in Kubernetes is that you don't need to modify your existing application to use an unfamiliar service discovery mechanism.
