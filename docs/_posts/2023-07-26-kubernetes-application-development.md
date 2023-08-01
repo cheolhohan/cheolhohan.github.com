@@ -263,3 +263,51 @@ spec:
 ## Service
 
 In Kubernetes, a Service is a method for exposing a network application that is running as one or more Pods in your cluster in your cluster. A key aim of Services in Kubernetes is that you don't need to modify your existing application to use an unfamiliar service discovery mechanism.
+
+## Docker commands and arguments recap
+
+```bash
+docker run ubuntu
+docker ps # Show running containers
+docker ps -a # Show all containers
+```
+
+### Difference between ENTRYPOINT and CMD
+
+- ENTRYPOINT: The command that is always executed when the container starts
+- CMD: The default command that is executed only when you don't specify a command
+
+Let's say you create an docker image called ubuntu-sleeper with the following Dockerfile
+
+```Dockerfile
+FROM ubuntu
+CMD ["sleep", "5"]
+```
+
+```bash
+docker run ubuntu-sleeper # This will run sleep 5 command
+```
+
+This will start ubuntu image and run sleep program by passing 5 as an argument. So when you run `docker run ubuntu-sleeper`, it will run `sleep 5` command. But what if you want to specify an argument when you run the container? You can do it like this
+
+```Dockerfile
+FROM ubuntu
+ENTRYPOINT ["sleep"]
+```
+
+```bash
+docker run ubuntu-sleeper 10 # This will run sleep 10 command
+docker run ubuntu-sleeper # This will return an error because you didn't specify an argument
+```
+
+Now, you can pass the parameter. But you will have an error because sleep command always requires an argument. So you can fix it like this
+
+```Dockerfile
+FROM ubuntu
+ENTRYPOINT ["sleep"]
+CMD ["5"]
+```
+
+```bash
+docker run ubuntu-sleeper # This will run sleep 5 command because CMD 5 is specified by default when you don't specify an argument
+```
