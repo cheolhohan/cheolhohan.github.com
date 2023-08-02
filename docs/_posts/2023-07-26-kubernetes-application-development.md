@@ -311,3 +311,36 @@ CMD ["5"]
 ```bash
 docker run ubuntu-sleeper # This will run sleep 5 command because CMD 5 is specified by default when you don't specify an argument
 ```
+
+## Commands and Arguments in Kubernetes
+
+In order to run the docker with Kubernetes pod, you will need to specify yaml file like this
+
+```yaml
+# Pod definition
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ubuntu-sleeper
+spec:
+  containers:
+    - name: ubuntu
+      image: ubuntu-sleeper
+      args: ["10"] # Overwriting CMD ["5"]
+```
+
+What if you want to specify the entrypoint? You can do it like this
+
+```yaml
+# Pod definition
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ubuntu-sleeper
+spec:
+  containers:
+    - name: ubuntu
+      image: ubuntu-sleeper
+      command: ["sleep2.0"] # Overwriting ENTRYPOINT ["sleep"]
+      args: ["10"] # Overwriting CMD ["5"]
+```
