@@ -343,4 +343,27 @@ spec:
       image: ubuntu-sleeper
       command: ["sleep2.0"] # Overwriting ENTRYPOINT ["sleep"]
       args: ["10"] # Overwriting CMD ["5"]
+``` 
+
+### How to edit kubernetes pod
+
+```bash
+kubectl edit pod ubuntu-sleeper-3
 ```
+
+Then you will get this kind of messages
+
+```bash
+error: pods "ubuntu-sleeper-3" is invalid
+A copy of your changes has been stored to "/tmp/kubectl-edit-1679602964.yaml"
+error: Edit cancelled, no valid changes were saved.
+```
+
+And you will just need to replace this temporary yaml file with the original one
+
+```bash
+kubectl replace --force -f /tmp/kubectl-edit-1679602964.yaml
+```
+
+
+
